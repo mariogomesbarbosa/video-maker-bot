@@ -1,0 +1,19 @@
+{
+  "name": "video-maker-bot",
+  "version": "1.0.0",
+  "description": "make videos automaticaly",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariogomesbarbosa/video-maker-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mariogomesbarbosa/video-maker-bot/issues"
+  },
+  "homepage": "https://github.com/mariogomesbarbosa/video-maker-bot#readme"
+}
