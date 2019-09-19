@@ -23,7 +23,7 @@ function start() {
         return selectedPrefixText
     }
 
-    console.log('Final search term: '+content.prefix + ' ' + content.searchTerm +)
+    console.log('Final search term: ' + content.prefix + ' ' + content.searchTerm)
 }
 
 start()
