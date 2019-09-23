@@ -2,6 +2,29 @@ const algorithmia = require('algorithmia')
 const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey
 const sentenceBoundaryDetection = require('sbd')
 
+const watsonApiKey = require('../credentials/watson-nlu.json').apiKey
+var fs = require('fs');
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1.js');
+
+var nlu = new NaturalLanguageUnderstandingV1({
+  iam_apikey: watsonApiKey,
+  version: '2018-04-05',
+  url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
+});
+
+nlu.analyze({
+    text: `Hi i'm Michael Jaskcon an I like doing the moonwalk every night.`,
+    features: {
+        keywords: {}
+    }
+}, (error, response) => {
+    if (error) {
+        throw error
+    }
+    console.log(JSON.stringify(response, null, 4))
+    process.exit(0)
+})
+
 async function robot(content) {
     await fetchContentFromWikipedia(content)
     sanitizeContent(content)
