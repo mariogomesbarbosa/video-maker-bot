@@ -1,10 +1,11 @@
 const algorithmia = require('algorithmia')
 const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey
+const sentenceBoundaryDetection = require('sbd')
 
 async function robot(content) {
     await fetchContentFromWikipedia(content)
     sanitizeContent(content)
-    // breakContentIntoSentences(content)
+    breakContentIntoSentences(content)
 
     async function fetchContentFromWikipedia(content) {
         const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey)
@@ -15,22 +16,46 @@ async function robot(content) {
         content.sourceContentOriginal = wikipediaContent.content
     }
 
-    function sanitizeContent(content){
-        const withoutBlankLinesAndMarkDown = removeBlankLinesAndMarkDown(content.sourceContentOriginal)
+    function sanitizeContent(content) {
+        const withoutBlankLines = removeBlankLines(content.sourceContentOriginal)
+        const withoutMarkDown = removeMarkDown(withoutBlankLines)
 
-        content.sourceContentSanitized = withoutBlankLinesAndMarkDown
+        content.sourceContentSanitized = withoutMarkDown
 
-        function removeBlankLinesAndMarkDown(text) {
+        function removeBlankLines(text) {
             const allLines = text.split('\n')
 
-            const withoutBlankLinesAndMarkDown = allLines.filter((line) =>{
-                if (line.trim().length === 0 || line.trim().startsWith('=')) {
+            const withoutBlankLines = allLines.filter((line) => {
+                if(line.trim().length === 0) {
                     return false
                 }
                 return true
             })
-            return withoutBlankLinesAndMarkDown.join(' ')
+            return withoutBlankLines
         }
+
+        function removeMarkDown(lines) {
+            const withoutMarkDown = lines.filter((line) => {
+                if (line.trim().startsWith('=')) {
+                    return false
+                }
+                return true
+            })
+            return withoutMarkDown.join(' ')
+        }
+    }
+
+    function breakContentIntoSentences(content){
+        content.sentences = []
+
+        const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
+        sentences.forEach((sentence) => {
+            content.sentences.push({
+                text: sentence,
+                keywords: [],
+                images: []
+            })
+        });
     }
 }
 
